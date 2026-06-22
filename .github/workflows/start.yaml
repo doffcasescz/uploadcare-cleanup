@@ -1,46 +1,36 @@
-name: Start parser
+name: Uploadcare cleanup
+
 on:
-  # Every Monday at 9:30 AM (PRAGUE TIME)
+  # Runs every Friday at 17:00 UTC (~18:00/19:00 Prague time depending on DST)
   schedule:
-    - cron: 30 8 * * *
+    - cron: '0 17 * * FRI'
 
   # Allow manual trigger
   workflow_dispatch:
 
 jobs:
-  start:
+  cleanup:
     runs-on: ubuntu-latest
     steps:
-
       - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Fetch snapshot
-        run: npm run fetch
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: ParseNews
-        id: parse_news
-        continue-on-error: true
-        run: npm run scrap
+      - name: Build
+        run: npm run build
 
-      - name: Integrity fix
-        id: db_fix
-        # if: steps.parse_news.outcome == 'failure'
-        run: npm run db-fix
-
-      - name: Commit changes
-        run: |
-          git config --global user.name '@digitalandyeu-bot'
-          git config --global user.email '148791487+digitalandyeu-bot@users.noreply.github.com'
-          git add db.json
-          git commit -m "Added $(date '+%Y-%m-%d') db.json"
-          git push
+      - name: Run cleanup
+        env:
+          UPLOADCARE_PUBLIC_KEY: ${{ secrets.UPLOADCARE_PUBLIC_KEY }}
+          UPLOADCARE_SECRET_KEY: ${{ secrets.UPLOADCARE_SECRET_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: npm start
