@@ -40,5 +40,5 @@ jobs:
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "chore(dist): build from $GITHUB_SHA [skip ci]"
+          git commit -m "build assets from $GITHUB_SHA"
           git push origin "HEAD:main"
