@@ -21,7 +21,7 @@ async function main() {
 
   const lines = [
     `🧹 <b>Uploadcare cleanup</b>`,
-    `Found: ${oldFiles.length} file(s) older than ${OLDER_THAN_DAYS} days (~${totalSizeMb} MB)`,
+    `Found ${oldFiles.length} file(s) to remove, ~${totalSizeMb} MB total`,
     `Deleted: ${result.deletedCount}`,
   ];
 
