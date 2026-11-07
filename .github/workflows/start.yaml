@@ -3,7 +3,7 @@ name: Uploadcare cleanup
 on:
   # Runs every Friday at 17:00 UTC (~18:00/19:00 Prague time depending on DST)
   schedule:
-    - cron: '0 17 * * FRI'
+    - cron: "0 17 * * FRI"
 
   # Allow manual trigger
   workflow_dispatch:
@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
